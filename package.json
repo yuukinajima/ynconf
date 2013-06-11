@@ -1,6 +1,6 @@
 {
   "name": "ynconf",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "simple config module",
   "main": "index.js",
   "scripts": {
@@ -16,5 +16,5 @@
   "author": "yuuki najima",
   "license": "BSD",
   "readmeFilename": "README.md",
-  "gitHead": "3fc65a69409b9fd595c772b73b650a91e7e675e0"
+  "gitHead": "b92c1b61bb8084a727f0ddf1d93990b6020f66cc"
 }
