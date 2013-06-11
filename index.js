@@ -25,7 +25,6 @@
   loadSubmodule = function(path) {
     var directories, directory, file, files, list, mod, sub, _i, _j, _len, _len1;
 
-    console.log("loadsub ", path);
     mod = {};
     if (!fs.existsSync("" + execPath + "/config/" + path)) {
       return mod;
@@ -55,8 +54,6 @@
       }
       return _results;
     })();
-    console.log("F:", files);
-    console.log("D:", directories);
     for (_i = 0, _len = files.length; _i < _len; _i++) {
       file = files[_i];
       file = file.replace(/\.js$/, "");
@@ -68,10 +65,7 @@
       directory = directories[_j];
       sub = {};
       sub[directory] = loadSubmodule("" + path + "/" + directory + "/");
-      console.log("S:", sub);
-      console.log("O:", mod);
       mergeSubmodule(mod, sub);
-      console.log("M:", mod);
     }
     return mod;
   };
@@ -81,7 +75,6 @@
 
     mode || (mode = process.env.NODE_ENV || "development");
     config = require("" + execPath + "/config/" + mode);
-    console.log("mode", mode);
     if (!fs.existsSync("" + execPath + "/config/" + mode + "/")) {
       return;
     }

@@ -14,14 +14,11 @@ mergeSubmodule = (origin, sub)->
 
 
 loadSubmodule = (path)->
-  console.log "loadsub ", path
   mod = {}
   return mod unless fs.existsSync "#{execPath}/config/#{path}"
   list = fs.readdirSync "#{execPath}/config/#{path}"
   files = (file for file in list when fs.lstatSync("#{execPath}/config/#{path}/#{file}").isFile())
   directories = (file for file in list when fs.lstatSync("#{execPath}/config/#{path}/#{file}").isDirectory())
-  console.log "F:", files
-  console.log "D:", directories
   for file in files
     file = file.replace /\.js$/, ""
     file = file.replace /\.coffee$/, ""
@@ -30,17 +27,13 @@ loadSubmodule = (path)->
   for directory in directories
     sub = {}
     sub[directory] = loadSubmodule "#{path}/#{directory}/"
-    console.log "S:",sub
-    console.log "O:",mod
     mergeSubmodule mod, sub
-    console.log "M:",mod
   mod
 
 
 load = (mode)->
   mode ||= process.env.NODE_ENV || "development"
   config = require "#{execPath}/config/#{mode}"
-  console.log "mode", mode
   return unless fs.existsSync "#{execPath}/config/#{mode}/"
   sub = loadSubmodule "#{mode}"
   mergeSubmodule config, sub
