@@ -1,6 +1,6 @@
 {
   "name": "ynconf",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "simple config module",
   "main": "index.js",
   "scripts": {
