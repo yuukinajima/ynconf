@@ -1,6 +1,6 @@
 {
   "name": "ynconf",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "simple config module",
   "main": "index.js",
   "scripts": {
@@ -19,5 +19,10 @@
   "gitHead": "b92c1b61bb8084a727f0ddf1d93990b6020f66cc",
   "bugs": {
     "url": "https://github.com/yuukinajima/ynconf/issues"
+  },
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-coffee": "^0.12.0",
+    "grunt-contrib-watch": "^0.6.1"
   }
 }
