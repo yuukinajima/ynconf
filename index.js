@@ -74,7 +74,7 @@
     mode || (mode = process.env.NODE_ENV || "development");
     config = require("" + confPath + "/" + mode);
     if (!fs.existsSync("" + confPath + "/" + mode + "/")) {
-      return;
+      return config;
     }
     sub = loadSubmodule("" + mode);
     return mergeSubmodule(config, sub);

@@ -36,7 +36,7 @@ loadSubmodule = (path)->
 load = (mode)->
   mode ||= process.env.NODE_ENV || "development"
   config = require "#{confPath}/#{mode}"
-  return unless fs.existsSync "#{confPath}/#{mode}/"
+  return config unless fs.existsSync "#{confPath}/#{mode}/"
   sub = loadSubmodule "#{mode}"
   mergeSubmodule config, sub
 
