@@ -1,46 +1,77 @@
-fs   = require 'fs'
+fs = require 'fs'
 path = require 'path'
+
+CSON = require 'cson'
+coffee = require 'coffee-script'
 
 execPath = process.cwd()
 confPath = path.resolve(process.env.NODE_PATH + '/../config')
-config = null
+LoadFileFormats = ['json', 'js', 'coffee', 'cson']
 
 
-mergeSubmodule = (origin, sub)->
-  for key, val of sub
-    if origin[key] and typeof origin[key] == 'object' and typeof val == 'object'
-      mergeSubmodule origin[key], val
+loadCoffeeScriptFile = (file_path) ->
+  coffee.eval fs.readFileSync(file_path).toString()
+
+loadCSONFile = (file_path) ->
+  CSON.load file_path
+
+loader = (file_path) ->
+  {ext} = path.parse file_path
+  parser = null
+  switch ext
+    when '.json' then parser = require
+    when '.js' then parser = require
+    when '.coffee' then parser = loadCoffeeScriptFile
+    when '.cson' then parser = loadCSONFile
+  parser file_path
+
+loadDir = (path_name) ->
+  answer = {}
+  list = fs.readdirSync "#{path_name}"
+  files = (file for file in list when fs.statSync("#{path_name}/#{file}").isFile())
+  directories = (file for file in list when fs.statSync("#{path_name}/#{file}").isDirectory())
+
+  names = {}
+  config_names = (path.parse("#{path_name}/#{file}").name for file in files).concat directories
+  for name in config_names
+    if names[name]
+      throw new Error "Duplicate config object #{name}"
     else
-      origin[key] = val
-  origin
+      names[name] = true
 
-
-loadSubmodule = (path)->
-  mod = {}
-  return mod unless fs.existsSync "#{confPath}/#{path}"
-  list = fs.readdirSync "#{confPath}/#{path}"
-  files = (file for file in list when fs.lstatSync("#{confPath}/#{path}/#{file}").isFile())
-  directories = (file for file in list when fs.lstatSync("#{confPath}/#{path}/#{file}").isDirectory())
   for file in files
-    file = file.replace /\.js$/, ""
-    file = file.replace /\.coffee$/, ""
-    file = file.replace /\.json$/, ""
-    mod[file] = require "#{confPath}/#{path}/#{file}"
+    file_path = path.resolve path_name, file
+    {name} = path.parse file_path
+    answer[name] = loader file_path
+
   for directory in directories
-    sub = {}
-    sub[directory] = loadSubmodule "#{path}/#{directory}/"
-    mergeSubmodule mod, sub
-  mod
+    answer[directory] = loadDir path.resolve path_name, directory
+  answer
+
+class Config
+  _load: (mode) -> new Config mode
+  constructor: (mode) ->
+    mode || = process.env.NODE_ENV
+    mode || = "development"
+    loaded = false
+    tmp = {}
+    for format in LoadFileFormats
+      if fs.existsSync("#{confPath}/#{mode}.#{format}") and fs.statSync("#{confPath}/#{mode}.#{format}").isFile()
+        if loaded
+          throw new Error "Duplicate config object #{name}"
+        tmp = loader "#{confPath}/#{mode}.#{format}"
+        loaded = true
+
+    if fs.existsSync("#{confPath}/#{mode}") and fs.statSync("#{confPath}/#{mode}").isDirectory()
+      if loaded
+        throw new Error "Duplicate config object #{name}"
+      tmp = loadDir "#{confPath}/#{mode}"
+      loaded = true
+
+    unless loaded
+      console.error "config file dosen't exist"
+    for key, val of tmp
+      @[key] = val
 
 
-load = (mode)->
-  mode ||= process.env.NODE_ENV || "development"
-  config = require "#{confPath}/#{mode}"
-  return unless fs.existsSync "#{confPath}/#{mode}/"
-  sub = loadSubmodule "#{mode}"
-  mergeSubmodule config, sub
-
-load()
-config._load = load
-
-module.exports = config
+module.exports = new Config
