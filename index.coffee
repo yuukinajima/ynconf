@@ -16,7 +16,7 @@ loadCSONFile = (file_path) ->
   CSON.load file_path
 
 loader = (file_path) ->
-  {ext} = path.parse file_path
+  ext = path.extname file_path
   parser = null
   switch ext
     when '.json' then parser = require

@@ -25,7 +25,7 @@ loadCSONFile = function(file_path) {
 
 loader = function(file_path) {
   var ext, parser;
-  ext = path.parse(file_path).ext;
+  ext = path.extname(file_path);
   parser = null;
   switch (ext) {
     case '.json':
