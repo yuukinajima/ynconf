@@ -1,28 +1,34 @@
 {
   "name": "ynconf",
-  "version": "0.0.5",
   "description": "simple config module",
-  "main": "index.js",
-  "scripts": {
-    "test": "mocha"
+  "version": "0.1.0",
+  "author": "yuuki najima",
+  "bugs": {
+    "url": "https://github.com/yuukinajima/ynconf/issues"
   },
+  "dependencies": {
+    "coffee-script": "^1.9.1",
+    "cson": "^2.0.0"
+  },
+  "devDependencies": {
+    "chai": "^2.1.1",
+    "grunt": "^0.4.5",
+    "grunt-contrib-coffee": "^0.12.0",
+    "grunt-contrib-watch": "^0.6.1",
+    "mocha": "^2.2.1"
+  },
+  "gitHead": "b92c1b61bb8084a727f0ddf1d93990b6020f66cc",
+  "keywords": [
+    "config"
+  ],
+  "license": "BSD",
+  "main": "index.js",
+  "readmeFilename": "README.md",
   "repository": {
     "type": "git",
     "url": "git://github.com/yuukinajima/ynconf.git"
   },
-  "keywords": [
-    "config"
-  ],
-  "author": "yuuki najima",
-  "license": "BSD",
-  "readmeFilename": "README.md",
-  "gitHead": "b92c1b61bb8084a727f0ddf1d93990b6020f66cc",
-  "bugs": {
-    "url": "https://github.com/yuukinajima/ynconf/issues"
-  },
-  "devDependencies": {
-    "grunt": "^0.4.5",
-    "grunt-contrib-coffee": "^0.12.0",
-    "grunt-contrib-watch": "^0.6.1"
+  "scripts": {
+    "test": "cake test:all"
   }
 }
